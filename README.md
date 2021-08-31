@@ -8,7 +8,6 @@ os := ObjectStorage{drive: drives.Kodo{
     AccessKey: kodoConfig.AccessKey,
     SecretKey: kodoConfig.SecretKey,
     Bucket:    kodoConfig.Bucket,
-    //BasePath:  kodoConfig.BasePath,
 }}
 
 localFile := "./golang.jpg"
