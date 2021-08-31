@@ -1,13 +1,11 @@
 package drives
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"fmt"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
-	"net/http"
 )
 
 type Kodo struct {
@@ -45,28 +43,17 @@ func (receiver *Kodo) init() {
 	}
 }
 
-func (receiver Kodo) PutNetFile(fileUrl string, key string) error {
+func (receiver Kodo) PutNetFile(fileInfo FileInfo, key string) error {
 	receiver.init()
-	//data := []byte(fileUrl)
-	//dataLen := int64(len(data))
 
-	//+-------------------------------------------------------
-	res, errGet := http.Get(fileUrl)
-	if errGet != nil {
-		return errGet
-	}
-	defer res.Body.Close()
-	// 获得get请求响应的reader对象
-	reader := bufio.NewReaderSize(res.Body, 32*1024)
-	dataLen := res.ContentLength
-	//+-------------------------------------------------------
+	defer fileInfo.Response.Body.Close()
 
-	err := receiver.formUploader.Put(context.Background(), &receiver.putRet, receiver.upToken, key, reader, dataLen, &receiver.putExtra)
+	err := receiver.formUploader.Put(context.Background(), &receiver.putRet, receiver.upToken, key, fileInfo.Reader, fileInfo.DataLen, &receiver.putExtra)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("receiver.formUploader.Put |", err)
 		return err
 	}
-	fmt.Println(receiver.putRet.Key, receiver.putRet.Hash)
+	//fmt.Println(receiver.putRet.Key, receiver.putRet.Hash)
 
 	return nil
 }
