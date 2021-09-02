@@ -19,6 +19,7 @@ type FileInfo struct {
 	Ext      string
 }
 
+// GetNetFileInfo 读取网路图片基础信息
 func GetNetFileInfo(fileUrl string) FileInfo {
 	Res, errGet := http.Get(fileUrl)
 	if errGet != nil {

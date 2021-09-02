@@ -6,25 +6,29 @@ import (
 	"testing"
 )
 
-func QiNiuObjectStorage() ObjectStorage {
-	return ObjectStorage{
+func QiNiuObjectStorage() *ObjectStorage {
+	return &ObjectStorage{
 		drive: drives.Kodo{
 			AccessKey: kodoConfig.AccessKey,
 			SecretKey: kodoConfig.SecretKey,
 			Bucket:    kodoConfig.Bucket,
 		},
-		appendExt: true,
+		isAutomaticProductionPath: true,
+		filePathPrefix:            "test/",
+		//appendExt: true,
 	}
 }
 
 func TestUnit_QiNiu_PutNetFile(t *testing.T) {
+
 	url := "https://imgconvert.csdnimg.cn/aHR0cDovL3AxLnBzdGF0cC5jb20vbGFyZ2UvcGdjLWltYWdlLzA0Zjk5ZjQ1ZTA2NTQyZDA5NjI4Y2E3MjFjNGZiYmVl?x-oss-process=image/format,png"
-	key := "temp/golang"
+	key := "temp/golang122"
 
 	//url := "https://img-home.csdnimg.cn/images/20210831092422.png"
 	//key := "temp/win11.png"
 
-	err := QiNiuObjectStorage().PutNetFile(url, key)
+	//err := QiNiuObjectStorage().PutNetFile(url, key)
+	err := QiNiuObjectStorage().SetFilePath(key).PutNetFile(url)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
