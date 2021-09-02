@@ -43,11 +43,13 @@ func TestUnit_QiNiu_PutNetFile(t *testing.T) {
 //	}
 //}
 
-//func TestUnit_QiNiu_PutFile(t *testing.T) {
-//	localFile := "./golang.jpg"
-//	key := "temp/golang.jpg"
-//	err := QiNiuObjectStorage().PutFile(localFile, key)
-//	if err!=nil{
-//		fmt.Println(err.Error())
-//	}
-//}
+func TestUnit_QiNiu_PutFile(t *testing.T) {
+	localFile := "./golang.jpg"
+	QiNiuObjectStorage().PutFile(localFile)
+
+	//key := "temp/golang.jpg"
+	//err := QiNiuObjectStorage().PutFile(localFile, key)
+	//if err!=nil{
+	//	fmt.Println(err.Error())
+	//}
+}

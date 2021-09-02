@@ -1,7 +1,6 @@
 package go_object_storage
 
 import (
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/qwxingzhe/go-object-storage/drives"
 	"time"
@@ -20,6 +19,7 @@ type ObjectStorage struct {
 	filePathKey string
 }
 
+// 自动生成文件存储路径
 func (receiver *ObjectStorage) automaticProductionPath(fileInfo drives.FileInfo) {
 	date := time.Unix(time.Now().Unix(), 0).Format("2006/01/02/")
 	//fmt.Println(datetime)
@@ -27,6 +27,7 @@ func (receiver *ObjectStorage) automaticProductionPath(fileInfo drives.FileInfo)
 	receiver.filePathKey = date + uuid.New().String() + "." + fileInfo.Ext
 }
 
+// 获取文件存储路径
 func (receiver *ObjectStorage) getFilePath(fileInfo drives.FileInfo) string {
 	if receiver.isAutomaticProductionPath { // 获取动态路径
 		receiver.automaticProductionPath(fileInfo)
@@ -39,6 +40,7 @@ func (receiver *ObjectStorage) getFilePath(fileInfo drives.FileInfo) string {
 	return receiver.filePathKey
 }
 
+// SetFilePath  设置文件存储路径
 func (receiver *ObjectStorage) SetFilePath(filePathKey string) *ObjectStorage {
 	receiver.filePathKey = filePathKey
 	return receiver
@@ -47,21 +49,23 @@ func (receiver *ObjectStorage) SetFilePath(filePathKey string) *ObjectStorage {
 // PutNetFile 上传网络文件
 func (receiver *ObjectStorage) PutNetFile(fileUrl string) error {
 
-	// 在基础框架层首先读取文件流，拼接文件后缀
-
+	// 通过文件地址获取基本信息
 	fileInfo := drives.GetNetFileInfo(fileUrl)
-	//if receiver.appendExt {
-	//	key = key + "." + fileInfo.Ext
-	//}
 
+	// 获取文件存储路径
 	key := receiver.getFilePath(fileInfo)
 
-	fmt.Println("----------------------------->>>>", key)
 	return receiver.drive.PutNetFile(fileInfo, key)
 }
 
 // PutFile 上传本地文件
-func (receiver *ObjectStorage) PutFile(localFile string, key string) error {
+func (receiver *ObjectStorage) PutFile(localFile string) error {
+
+	// 通过文件地址获取基本信息
+	fileInfo := drives.GetLocalFileInfo(localFile)
+
+	key := receiver.getFilePath(fileInfo)
+
 	return receiver.drive.PutFile(localFile, key)
 }
 
