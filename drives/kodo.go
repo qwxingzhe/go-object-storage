@@ -3,7 +3,6 @@ package drives
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
 )
@@ -43,32 +42,12 @@ func (receiver *Kodo) init() {
 	}
 }
 
-func (receiver Kodo) PutNetFile(fileInfo FileInfo, key string) error {
+func (receiver Kodo) PutContent(fileInfo FileInfo, key string) error {
 	receiver.init()
-
-	defer fileInfo.Response.Body.Close()
-
-	err := receiver.formUploader.Put(context.Background(), &receiver.putRet, receiver.upToken, key, fileInfo.Reader, fileInfo.DataLen, &receiver.putExtra)
+	err := receiver.formUploader.Put(context.Background(), &receiver.putRet, receiver.upToken, key, bytes.NewReader(fileInfo.Content), fileInfo.DataLen, &receiver.putExtra)
 	if err != nil {
-		fmt.Println("receiver.formUploader.Put |", err)
 		return err
 	}
-	//fmt.Println(receiver.putRet.Key, receiver.putRet.Hash)
-
-	return nil
-}
-
-func (receiver Kodo) PutStr(content string, key string) error {
-	receiver.init()
-	data := []byte(content)
-	dataLen := int64(len(data))
-	err := receiver.formUploader.Put(context.Background(), &receiver.putRet, receiver.upToken, key, bytes.NewReader(data), dataLen, &receiver.putExtra)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	fmt.Println(receiver.putRet.Key, receiver.putRet.Hash)
-
 	return nil
 }
 
@@ -78,7 +57,5 @@ func (receiver Kodo) PutFile(localFile string, key string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(receiver.putRet.Key, receiver.putRet.Hash)
-
 	return nil
 }

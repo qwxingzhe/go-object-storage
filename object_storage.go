@@ -55,7 +55,7 @@ func (receiver *ObjectStorage) PutNetFile(fileUrl string) error {
 	// 获取文件存储路径
 	key := receiver.getFilePath(fileInfo)
 
-	return receiver.drive.PutNetFile(fileInfo, key)
+	return receiver.drive.PutContent(fileInfo, key)
 }
 
 // PutFile 上传本地文件
@@ -71,5 +71,6 @@ func (receiver *ObjectStorage) PutFile(localFile string) error {
 
 // PutStr 上传文本内容
 func (receiver *ObjectStorage) PutStr(content string, key string) error {
-	return receiver.drive.PutStr(content, key)
+	fileInfo := drives.GetStrFileInfo(content)
+	return receiver.drive.PutContent(fileInfo, key)
 }

@@ -1,55 +1,69 @@
 package drives
 
 import (
-	"bufio"
 	go_file_type "github.com/qwxingzhe/go-file-type"
+	"io/ioutil"
 	"net/http"
 	"path"
+	"strings"
 )
 
 type ObjectStorageDrive interface {
 	// PutFile 上传本地文件
 	PutFile(localFile string, key string) error
-	// PutStr 上传字符串到对象存储
-	PutStr(content string, key string) error
-	// PutNetFile 将网络文件转存到对象存储
-	PutNetFile(fileUrl FileInfo, key string) error
+	// PutContent 上传字符串到对象存储
+	PutContent(fileInfo FileInfo, key string) error
 }
 
 type FileInfo struct {
-	Response *http.Response
-	Reader   *bufio.Reader
-	DataLen  int64
-	Ext      string
+	Content []byte
+	DataLen int64
+	Ext     string
 }
 
 // GetNetFileInfo 读取网路文件基础信息
 func GetNetFileInfo(fileUrl string) FileInfo {
-	Res, errGet := http.Get(fileUrl)
-	if errGet != nil {
-		panic(errGet)
+	res, err := http.Get(fileUrl)
+
+	if err != nil {
+		panic(err)
 	}
-	//defer res.Body.Close()
-	// 获得get请求响应的reader对象
-	Reader := bufio.NewReaderSize(Res.Body, 32*1024)
-	DataLen := Res.ContentLength
+
+	defer func() {
+		if ferr := res.Body.Close(); ferr != nil {
+			err = ferr
+		}
+	}()
+
+	if err != nil {
+		panic(err)
+	}
+
+	dataLen := res.ContentLength
+	bytes, _ := ioutil.ReadAll(res.Body)
 
 	// 获取文件后缀
-	bytes := make([]byte, 10)
-	Reader.Read(bytes)
-	Ext := go_file_type.GetFileType(bytes)
+	Ext := go_file_type.GetFileType(bytes[:10])
 
 	return FileInfo{
-		Response: Res,
-		Reader:   Reader,
-		DataLen:  DataLen,
-		Ext:      Ext,
+		Content: bytes,
+		DataLen: dataLen,
+		Ext:     Ext,
+	}
+}
+
+// GetStrFileInfo 读取字符串基础信息
+func GetStrFileInfo(content string) FileInfo {
+	return FileInfo{
+		Content: []byte(content),
+		DataLen: int64(len(content)),
 	}
 }
 
 // GetLocalFileInfo 读取本地文件基础信息
 func GetLocalFileInfo(localFile string) FileInfo {
 	Ext := path.Ext(localFile)
+	Ext = strings.Replace(Ext, ".", "", 1)
 	return FileInfo{
 		Ext: Ext,
 	}
