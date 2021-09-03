@@ -10,7 +10,7 @@ type ObjectStorage struct {
 	// 存储驱动
 	Drive drives.ObjectStorageDrive
 	// 是否依据文件类型自动补充文件后缀
-	ISAppendExt bool
+	IsAppendExt bool
 	// 路径前缀
 	FilePathPrefix string
 	// 是否自动生产路径
@@ -42,7 +42,7 @@ func (receiver *ObjectStorage) automaticProductionPath(fileInfo drives.FileInfo)
 func (receiver *ObjectStorage) getFilePath(fileInfo drives.FileInfo) string {
 	if receiver.IsAutomaticProductionPath { // 获取动态路径
 		receiver.automaticProductionPath(fileInfo)
-	} else if receiver.ISAppendExt { // 拼接文件后缀
+	} else if receiver.IsAppendExt { // 拼接文件后缀
 		receiver.FilePathKey = receiver.FilePathKey + "." + fileInfo.Ext
 	}
 	if receiver.FilePathPrefix != "" { // 拼接文件前缀

@@ -15,7 +15,7 @@ func GetObjectStorage(isAutomaticProductionPath bool) *ObjectStorage {
 		},
 		IsAutomaticProductionPath: isAutomaticProductionPath,
 		FilePathPrefix:            "test/",
-		ISAppendExt:               false,
+		IsAppendExt:               false,
 		BaseUrl:                   "http://qynr9haq9.hd-bkt.clouddn.com/",
 	}
 }

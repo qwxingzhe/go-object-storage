@@ -34,7 +34,7 @@ func GetObjectStorage(isAutomaticProductionPath bool) *ObjectStorage {
 		},
 		IsAutomaticProductionPath: isAutomaticProductionPath,
 		FilePathPrefix:            "test/",
-		ISAppendExt:                 false,
+		IsAppendExt:                 false,
 		BaseUrl:                   "http://qynr9haq9.hd-bkt.clouddn.com/",
 	}
 }
@@ -84,7 +84,7 @@ fmt.Println(fileInfo)
 | Drive                     | 对象存储驱动           |
 | IsAutomaticProductionPath | 是否自动生产文件路径   |
 | FilePathPrefix            | 指定文件存储前缀       |
-| ISAppendExt               | 是否自动拼接文件名后缀 |
+| IsAppendExt               | 是否自动拼接文件名后缀 |
 | BaseUrl                   | 基础url路径            |
 
 ## 实现的存储引擎
