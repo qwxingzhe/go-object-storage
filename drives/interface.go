@@ -52,8 +52,8 @@ func GetNetFileInfo(fileUrl string) FileInfo {
 	}
 }
 
-// GetStrFileInfo 读取字符串基础信息
-func GetStrFileInfo(content string) FileInfo {
+// GetContentInfo 读取字符串基础信息
+func GetContentInfo(content string) FileInfo {
 	return FileInfo{
 		Content: []byte(content),
 		DataLen: int64(len(content)),
