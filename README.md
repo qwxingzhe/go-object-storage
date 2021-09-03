@@ -25,17 +25,17 @@ $ go get -u github.com/qwxingzhe/go-object-storage
 配置存储引擎
 
 ~~~
-func QiNiuObjectStorage(isAutomaticProductionPath bool) *ObjectStorage {
+func GetObjectStorage(isAutomaticProductionPath bool) *ObjectStorage {
 	return &ObjectStorage{
-		drive: drives.Kodo{
+		Drive: drives.Kodo{
 			AccessKey: kodoConfig.AccessKey,
 			SecretKey: kodoConfig.SecretKey,
 			Bucket:    kodoConfig.Bucket,
 		},
-		isAutomaticProductionPath: isAutomaticProductionPath,
-		filePathPrefix:            "test/",
-		appendExt:                 false,
-		baseUrl:                   "http://qynr9haq9.hd-bkt.clouddn.com/",
+		IsAutomaticProductionPath: isAutomaticProductionPath,
+		FilePathPrefix:            "test/",
+		ISAppendExt:                 false,
+		BaseUrl:                   "http://qynr9haq9.hd-bkt.clouddn.com/",
 	}
 }
 ~~~
@@ -45,7 +45,7 @@ func QiNiuObjectStorage(isAutomaticProductionPath bool) *ObjectStorage {
 ~~~
 url := "https://tenfei03.cfp.cn/creative/vcg/veer/800/new/VCG41N813911068.jpg"
 
-fileInfo, err := QiNiuObjectStorage(true).PutNetFile(url)
+fileInfo, err := GetObjectStorage(true).PutNetFile(url)
 if err != nil {
     t.Errorf(err.Error())
 }
@@ -57,7 +57,7 @@ fmt.Println(fileInfo)
 ~~~
 localFile := "111111111111111"
 key := "temp/11111111111.txt"
-fileInfo, err := QiNiuObjectStorage(false).SetFilePath(key).PutStr(localFile)
+fileInfo, err := GetObjectStorage(false).SetFilePath(key).PutStr(localFile)
 if err != nil {
     t.Errorf(err.Error())
 }
@@ -68,13 +68,24 @@ fmt.Println(fileInfo)
 
 ~~~
 localFile := "./golang.jpg"
-fileInfo, err := QiNiuObjectStorage(true).PutFile(localFile)
+fileInfo, err := GetObjectStorage(true).PutFile(localFile)
 if err != nil {
     t.Errorf(err.Error())
 }
 fmt.Println(fileInfo)
 ~~~
 
+## 参数说明
+
+#### ObjectStorage 
+
+| 参数                      | 说明                   |
+| ------------------------- | ---------------------- |
+| Drive                     | 对象存储驱动           |
+| IsAutomaticProductionPath | 是否自动生产文件路径   |
+| FilePathPrefix            | 指定文件存储前缀       |
+| ISAppendExt               | 是否自动拼接文件名后缀 |
+| BaseUrl                   | 基础url路径            |
 
 ## 实现的存储引擎
 
