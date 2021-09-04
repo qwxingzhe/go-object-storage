@@ -23,9 +23,9 @@ type ObjectStorage struct {
 
 type UploadFileInfo struct {
 	// 存储文件的完整url
-	url string
+	Url string
 	// 存储文件的路径
-	key string
+	Key string
 	// TODO 文件大小
 	// TODO 文件类型
 }
@@ -53,8 +53,8 @@ func (receiver *ObjectStorage) getFilePath(fileInfo drives.FileInfo) string {
 
 func (receiver *ObjectStorage) getUploadFileInfo() UploadFileInfo {
 	return UploadFileInfo{
-		url: receiver.BaseUrl + receiver.FilePathKey,
-		key: receiver.FilePathKey,
+		Url: receiver.BaseUrl + receiver.FilePathKey,
+		Key: receiver.FilePathKey,
 	}
 }
 
