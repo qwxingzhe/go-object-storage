@@ -1,7 +1,7 @@
 package drives
 
 import (
-	go_file_type "github.com/qwxingzhe/go-file-type"
+	gofiletype "github.com/qwxingzhe/go-file-type"
 	"io/ioutil"
 	"net/http"
 	"path"
@@ -43,7 +43,7 @@ func GetNetFileInfo(fileUrl string) FileInfo {
 	bytes, _ := ioutil.ReadAll(res.Body)
 
 	// 获取文件后缀
-	Ext := go_file_type.GetFileType(bytes[:10])
+	Ext := gofiletype.GetFileTypeByByte(bytes[:10])
 
 	return FileInfo{
 		Content: bytes,

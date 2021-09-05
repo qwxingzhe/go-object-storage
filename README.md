@@ -22,34 +22,39 @@ $ go get -u github.com/qwxingzhe/go-object-storage
 
 # 使用指南
 
-配置存储引擎
+
 
 ~~~
-func GetObjectStorage(isAutomaticProductionPath bool) *ObjectStorage {
-	return &ObjectStorage{
-		Drive: drives.Kodo{
-			AccessKey: kodoConfig.AccessKey,
-			SecretKey: kodoConfig.SecretKey,
-			Bucket:    kodoConfig.Bucket,
+package main
+
+import (
+	"fmt"
+	objectstorage "github.com/qwxingzhe/go-object-storage"
+	objectstoragedrives "github.com/qwxingzhe/go-object-storage/drives"
+	"github.com/qwxingzhe/go-package-demo/config"
+)
+
+// 配置存储引擎
+func GetObjectStorage(isAutomaticProductionPath bool) *objectstorage.ObjectStorage {
+	return &objectstorage.ObjectStorage{
+		Drive: objectstoragedrives.Kodo{
+			AccessKey: config.KodoConfig.AccessKey,
+			SecretKey: config.KodoConfig.SecretKey,
+			Bucket:    config.KodoConfig.Bucket,
 		},
 		IsAutomaticProductionPath: isAutomaticProductionPath,
 		FilePathPrefix:            "test/",
-		IsAppendExt:                 false,
+		IsAppendExt:               false,
 		BaseUrl:                   "http://qynr9haq9.hd-bkt.clouddn.com/",
 	}
 }
-~~~
 
-转存网络文件
-
-~~~
-url := "https://tenfei03.cfp.cn/creative/vcg/veer/800/new/VCG41N813911068.jpg"
-
-fileInfo, err := GetObjectStorage(true).PutNetFile(url)
-if err != nil {
-    t.Errorf(err.Error())
+func main() {
+    // 转存网络文件
+	url := "https://tenfei03.cfp.cn/creative/vcg/veer/800/new/VCG41N813911068.jpg"
+	fileInfo, _ := GetObjectStorage(true).PutNetFile(url)
+	fmt.Println(fileInfo)
 }
-fmt.Println(fileInfo)
 ~~~
 
 上传指定内容，指定存储路径

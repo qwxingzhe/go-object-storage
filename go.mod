@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/qiniu/go-sdk/v7 v7.9.8
-	github.com/qwxingzhe/go-file-type v0.0.0-20210901161907-81b762ad9e37
+	github.com/qwxingzhe/go-file-type v0.0.0-20210904033909-9eb7f61e24f1
 )
 
 require (
