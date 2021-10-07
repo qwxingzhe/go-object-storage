@@ -1,9 +1,10 @@
 package go_object_storage
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/qwxingzhe/go-object-storage/drives"
-	"time"
 )
 
 type ObjectStorage struct {
@@ -58,7 +59,11 @@ func (receiver *ObjectStorage) getUploadFileInfo() UploadFileInfo {
 	}
 }
 
-// PUBLIC
+//+-------------------------------------------------------------------------------+//
+//+				   			    	   PUBLIC 				    				  +//
+//+-------------------------------------------------------------------------------+//
+
+// 基础部分
 //+------------------------------------------------------------------------------------------
 
 // BuildBasePath 生成基础路径
@@ -73,14 +78,25 @@ func (receiver *ObjectStorage) SetFilePath(filePathKey string) *ObjectStorage {
 	return receiver
 }
 
+// 执行不同类型的文件上传
+//+------------------------------------------------------------------------------------------
+// PutFormFile 上传表单文件
+func (receiver *ObjectStorage) PutFileByFileInfo(fileInfo drives.FileInfo) (UploadFileInfo, error) {
+	// 获取文件存储路径
+	key := receiver.getFilePath(fileInfo)
+	var err error
+	// var uploadFileInfo UploadFileInfo
+	if fileInfo.Content != nil {
+		err = receiver.Drive.PutContent(fileInfo, key)
+	}
+	return receiver.getUploadFileInfo(), err
+}
+
 // PutNetFile 上传网络文件
 func (receiver *ObjectStorage) PutNetFile(fileUrl string) (UploadFileInfo, error) {
 	// 通过文件地址获取基本信息
 	fileInfo := drives.GetNetFileInfo(fileUrl)
-	// 获取文件存储路径
-	key := receiver.getFilePath(fileInfo)
-	err := receiver.Drive.PutContent(fileInfo, key)
-	return receiver.getUploadFileInfo(), err
+	return receiver.PutFileByFileInfo(fileInfo)
 }
 
 // PutFile 上传本地文件
@@ -95,7 +111,5 @@ func (receiver *ObjectStorage) PutFile(localFile string) (UploadFileInfo, error)
 // PutStr 上传文本内容
 func (receiver *ObjectStorage) PutStr(content string) (UploadFileInfo, error) {
 	fileInfo := drives.GetContentInfo(content)
-	key := receiver.getFilePath(fileInfo)
-	err := receiver.Drive.PutContent(fileInfo, key)
-	return receiver.getUploadFileInfo(), err
+	return receiver.PutFileByFileInfo(fileInfo)
 }
