@@ -3,6 +3,7 @@ package drives
 import (
 	"bytes"
 	"context"
+
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
 )
@@ -36,9 +37,7 @@ func (receiver *Kodo) init() {
 	receiver.putRet = storage.PutRet{}
 	// 可选配置
 	receiver.putExtra = storage.PutExtra{
-		Params: map[string]string{
-			"x:name": "github logo",
-		},
+		Params: map[string]string{},
 	}
 }
 
@@ -51,9 +50,9 @@ func (receiver Kodo) PutContent(fileInfo FileInfo, key string) error {
 	return nil
 }
 
-func (receiver Kodo) PutFile(localFile string, key string) error {
+func (receiver Kodo) PutFile(localFilePath string, key string) error {
 	receiver.init()
-	err := receiver.formUploader.PutFile(context.Background(), &receiver.putRet, receiver.upToken, key, localFile, &receiver.putExtra)
+	err := receiver.formUploader.PutFile(context.Background(), &receiver.putRet, receiver.upToken, key, localFilePath, &receiver.putExtra)
 	if err != nil {
 		return err
 	}

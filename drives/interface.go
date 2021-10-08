@@ -1,16 +1,18 @@
 package drives
 
 import (
-	gofiletype "github.com/qwxingzhe/go-file-type"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"path"
 	"strings"
+
+	gofiletype "github.com/qwxingzhe/go-file-type"
 )
 
 type ObjectStorageDrive interface {
 	// PutFile 上传本地文件
-	PutFile(localFile string, key string) error
+	PutFile(localFilePath string, key string) error
 	// PutContent 上传字符串到对象存储
 	PutContent(fileInfo FileInfo, key string) error
 }
@@ -48,6 +50,27 @@ func GetNetFileInfo(fileUrl string) FileInfo {
 	return FileInfo{
 		Content: bytes,
 		DataLen: dataLen,
+		Ext:     Ext,
+	}
+}
+
+// GetFileHeaderFileInfo 读取文件流中文件信息
+func GetFileHeaderFileInfo(file *multipart.FileHeader) FileInfo {
+	fileContent, err := file.Open()
+	if err != nil {
+		panic(err)
+	}
+
+	bytes, err := ioutil.ReadAll(fileContent)
+	if err != nil {
+		panic(err)
+	}
+
+	Ext := gofiletype.GetFileTypeByByte(bytes[:10])
+
+	return FileInfo{
+		Content: bytes,
+		DataLen: int64(len(bytes)),
 		Ext:     Ext,
 	}
 }

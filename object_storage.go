@@ -1,6 +1,7 @@
 package go_object_storage
 
 import (
+	"mime/multipart"
 	"time"
 
 	"github.com/google/uuid"
@@ -80,7 +81,7 @@ func (receiver *ObjectStorage) SetFilePath(filePathKey string) *ObjectStorage {
 
 // 执行不同类型的文件上传
 //+------------------------------------------------------------------------------------------
-// PutFormFile 上传表单文件
+// PutFileByFileInfo 通过自行构建FileInfo上传
 func (receiver *ObjectStorage) PutFileByFileInfo(fileInfo drives.FileInfo) (UploadFileInfo, error) {
 	// 获取文件存储路径
 	key := receiver.getFilePath(fileInfo)
@@ -92,11 +93,14 @@ func (receiver *ObjectStorage) PutFileByFileInfo(fileInfo drives.FileInfo) (Uplo
 	return receiver.getUploadFileInfo(), err
 }
 
+// PutFileHeaderFile 读取文件流中文件信息
+func (receiver *ObjectStorage) PutFileHeaderFile(file *multipart.FileHeader) (UploadFileInfo, error) {
+	return receiver.PutFileByFileInfo(drives.GetFileHeaderFileInfo(file))
+}
+
 // PutNetFile 上传网络文件
 func (receiver *ObjectStorage) PutNetFile(fileUrl string) (UploadFileInfo, error) {
-	// 通过文件地址获取基本信息
-	fileInfo := drives.GetNetFileInfo(fileUrl)
-	return receiver.PutFileByFileInfo(fileInfo)
+	return receiver.PutFileByFileInfo(drives.GetNetFileInfo(fileUrl))
 }
 
 // PutFile 上传本地文件
@@ -110,6 +114,5 @@ func (receiver *ObjectStorage) PutFile(localFile string) (UploadFileInfo, error)
 
 // PutStr 上传文本内容
 func (receiver *ObjectStorage) PutStr(content string) (UploadFileInfo, error) {
-	fileInfo := drives.GetContentInfo(content)
-	return receiver.PutFileByFileInfo(fileInfo)
+	return receiver.PutFileByFileInfo(drives.GetContentInfo(content))
 }
